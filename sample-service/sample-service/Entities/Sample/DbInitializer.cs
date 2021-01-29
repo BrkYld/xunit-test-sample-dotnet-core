@@ -1,0 +1,39 @@
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using System;
+
+namespace sample_service.Entities.Sample
+{
+    public static class DbInitializer
+    {
+        public static void InitializeData(this IApplicationBuilder app)
+        {
+            using (IServiceScope serviceScope = app.ApplicationServices.CreateScope())
+            {
+                var db = serviceScope.ServiceProvider.GetService<SampleDbContext>();
+
+                User user = new User
+                { Id = 1, Firstname = "Kemal", Lastname = "Akçıl", Email = "me@kemalakcil.com", Password = "123", CreateDate = DateTime.Now, Status = true };
+
+                Country country = new Country
+                { Id = 1, Name = "Türkiye" };
+
+                City city = new City
+                { Id = 1, Name = "Sakarya", CountryId = 1 };
+
+                District district = new District
+                { Id = 1, Name = "Adapazarı", CityId = 1 };
+
+                db.User.Add(user);
+
+                db.Country.Add(country);
+
+                db.City.Add(city);
+
+                db.District.Add(district);
+
+                db.SaveChanges();
+            }
+        }
+    }
+}
